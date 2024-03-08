@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tech.police.dao.IDao">
+	<sql id="searchType">
+		<choose>
+			<when test="param1 == 'ptitle'">
+				WHERE
+					PTITLE LIKE '%'||#{param2}||'%'
+			</when>
+			<when test="param1 == 'pcontent'">
+				WHERE
+					PCONTENT LIKE '%'||#{param2}||'%'
+			</when>
+			<when test="param1 == 'ptitlepcontent'">
+				WHERE
+					PTITLE LIKE '%'||#{param2}||'%' or
+					PCONTENT LIKE '%'||#{param2}||'%'
+			</when>
+			<when test="param1 == 'pwriter'">
+				WHERE
+					PWRITER LIKE '%'||#{param2}||'%'
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</sql>
+
+	<select id="selectAllCount" resultType="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			POLICEBOARD
+		<include refid="searchType" />
+	</select>
+	
+	<select id="selectAll" resultType="com.tech.police.dto.PoliceBoardDto">
+		SELECT 
+		    PNUM, PTITLE, PCONTENT, PWRITER, PREGDATE, PHIT, PFILESRC
+		FROM (
+		    SELECT
+		        ROWNUM NUM, N.*
+		    FROM (
+		        SELECT
+		            PNUM, PTITLE, PCONTENT, PWRITER, PREGDATE, PHIT, PFILESRC
+		        FROM
+		            POLICEBOARD
+		        ORDER BY
+		            PNUM DESC) N
+			<include refid="searchType" />)
+	    WHERE
+	        NUM BETWEEN #{param3} AND #{param4}
+	</select>
+	
+	<select id="select" resultType="com.tech.police.dto.PoliceBoardDto">
+		SELECT 
+		    PNUM, PTITLE, PCONTENT, PWRITER, PREGDATE, PHIT, PFILESRC
+		FROM
+			POLICEBOARD
+	    WHERE
+	        PNUM = #{param1}
+	</select>
+</mapper>
