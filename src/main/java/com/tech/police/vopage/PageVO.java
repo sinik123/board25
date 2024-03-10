@@ -2,7 +2,7 @@ package com.tech.police.vopage;
 
 public class PageVO {
     private Integer displayRowCount = 10;           // 출력할 데이터 개수
-    private Integer grpPageCnt=3;                   //// 페이지그룹에서 페이지갯수 수정*
+    private Integer grpPageCnt=10;                   //// 페이지그룹에서 페이지갯수 수정*
     private Integer rowStart;                       // 시작행번호
     private Integer rowEnd;                         // 종료행 번호
     private Integer totPage;                        // 전체 페이수
@@ -49,6 +49,14 @@ public class PageVO {
         this.page = page;
     }
 
+    public Integer getGrpPageCnt() {
+		return grpPageCnt;
+	}
+
+	public void setGrpPageCnt(Integer grpPageCnt) {
+		this.grpPageCnt = grpPageCnt;
+	}
+    
     public Integer getRowStart() {
         return rowStart;
     }

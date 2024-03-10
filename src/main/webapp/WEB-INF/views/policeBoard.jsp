@@ -50,6 +50,10 @@
 	#policeBoard td {
 		padding: 5px;
 	}
+	
+	#policeBoard tr:hover {
+		background-color: #f5f5f5;
+	}
 		
 	#hptitle {
 		text-align: left;
@@ -65,6 +69,10 @@
 	
 	.pnum, .ptitle, .pwriter, .pregdate, .phit {
 		border-bottom: 1px solid #e2e2e2;
+	}
+	
+	#titleLink {
+		text-decoration: none;
 	}
 	
 	.pnum, .pwriter, .pregdate, .phit {
@@ -94,16 +102,17 @@
 	
 	#pageButtonWrap {
 		margin-top: 10px;
+		text-align: center;
 	}
 	
 	#headerLeft {
 		float: left;
-		width: 50%;
+		width: 60%;
 	}
 	
 	#headerRight {
 		float: right;
-		width: 50%;
+		width: 40%;
 		text-align: right;
 	}
 	
@@ -137,7 +146,6 @@
 		vertical-align: top;
 		box-sizing: content-box;
 		height: 20px;
-		color: #5f5f5f;
 	}
 	
 	.defaultButton {
@@ -163,6 +171,12 @@
 		padding: 5px;
 	}
 	
+	.infoTextRed {
+		display: inline-block;
+		padding: 5px;
+		color: #ad0000;
+	}
+	
 	#changeButton {
 		padding: 5px 10px 5px 10px;
 		border: 0;
@@ -181,14 +195,13 @@
 		background-color: #737373;
 	}
 	
-	#pageButtonTable {
-		margin-left: auto;
-		margin-right: auto;
+	.pageButtonTable {
+		display: inline-table;
 		border: 1px solid #c2c2c2;
 		border-collapse: collapse;
 	}
 	
-	#pageButtonTable td {
+	.pageButtonTable td {
 		border: 1px solid #c2c2c2;
 		width: 25px;
 		height: 25px;
@@ -197,32 +210,51 @@
 		color: #222222;
 	}
 	
-	#pageButtonTable td:hover {
+	.pageButtonTable td:hover {
 		color: white;
 		background-color: #ad0000;
 		cursor: pointer;
 	}
 	
+	.pageArrowsTable {
+		display: inline-table;
+		border: 1px solid #c2c2c2;
+		border-collapse: collapse;
+	}
+	
+	.pageArrowsTable td {
+		border: 1px solid #c2c2c2;
+		width: 25px;
+		height: 25px;
+		text-align: center;
+		font-weight: bold;
+		color: #969696;
+	}
+	
+	.pageArrowsTable td:hover {
+		color: white;
+		background-color: #ad0000;
+		cursor: pointer;
+	}
 </style>
 <script>
 	function searchReset() {
 		location.href = "policeBoard";
 	}
 	
-	function clearSearchNotice() {
-		if (document.getElementById("keywordInput").value == "검색어를 입력하세요.") {
-			var element = document.getElementById("keywordInput");
-			element.value = "";
-			element.style.color = "#000000";
-		}
+	function changePage(page) {
+		
+		var params = "";
+		params += "page=" + page;
+		params += "&searchType=" + document.getElementById("searchType").value;
+		params += "&keyword=" + document.getElementById("keywordInput").value;
+		params += "&displayRowCount=" + document.getElementById("displayRowCount").value;
+		
+		location.href = "policeBoard?" + params;
 	}
 	
-	function checkempty() {
-		if (document.getElementById("keywordInput").value == "") {
-			var element = document.getElementById("keywordInput");
-			element.value = "검색어를 입력하세요.";
-			element.style.color = "#5f5f5f";
-		}
+	function writeView() {
+		location.href = "writeView";
 	}
 </script>
 </head>
@@ -233,7 +265,8 @@
 		<div id="searchFormWrap">
 			<form action="policeBoard" id="searchForm">
 				<input type="hidden" name="count" value="${count }" />
-				<select class="selectDefault" name="searchType">
+				<input type="hidden" name="displayRowCount" value="${searchVO.displayRowCount }" />
+				<select class="selectDefault" name="searchType" id="searchType">
 					<option value="none" ${searchType == 'none' || searchType == '' ? 'selected' : '' }>-- 검색선택 --</option>
 					<option value="ptitle" ${searchType == 'ptitle' ? 'selected' : '' }>제목</option>
 					<option value="pcontent" ${searchType == 'pcontent' ? 'selected' : '' }>내용</option>
@@ -241,10 +274,9 @@
 					<option value="pwriter" ${searchType == 'pwriter' ? 'selected' : '' }>등록자명</option>
 				</select>
 			
-				<input type="text" id="keywordInput" name="keyword" value="${keyword }"
-				onmousedown="clearSearchNotice()" onfocusout="checkempty()" />
+				<input type="text" id="keywordInput" name="keyword" value="${keyword }" placeholder="검색어를 입력하세요." />
 				
-				<button type="submit" class="defaultButton" onclick="" >
+				<button type="submit" class="defaultButton">
 					<i class="fa-solid fa-magnifying-glass"></i>
 					검색
 				</button>
@@ -254,8 +286,8 @@
 		
 		
 		<div id="headerLeft">
-			<span class="infoText">총 게시물: ${searchVO.totRow }</span>
-			<span class="infoText">현재 페이지: ${searchVO.page }</span>
+			<span class="infoText">총 게시물: </span><span class="infoTextRed">${searchVO.totRow }</span><span class="infoText">건</span>
+			<span class="infoText">현재 페이지: </span><span class="infoTextRed">${searchVO.page }/${searchVO.totPage }</span>
 		</div>
 		
 		<div id="headerRight">
@@ -264,7 +296,7 @@
 				<input type="hidden" name="searchType" value="${searchType }" />
 				<input type="hidden" name="keyword" value="${keyword }" />
 				<span class="infoText">페이지당 목록</span>
-				<select class="selectDefault" name="displayRowCount">
+				<select class="selectDefault" name="displayRowCount" id="displayRowCount">
 					<option value="10" ${searchVO.displayRowCount == '10' ? 'selected' : '' }>10개</option>
 					<option value="15" ${searchVO.displayRowCount == '15' ? 'selected' : '' }>15개</option>
 					<option value="20" ${searchVO.displayRowCount == '20' ? 'selected' : '' }>20개</option>
@@ -297,7 +329,7 @@
 						<span>${dto.pnum }</span>
 					</td>
 					<td ${s.last ? 'class="lptitle"' : 'class="ptitle"' }>
-						<span><a href="contentView?pnum=${dto.pnum }">${dto.ptitle }</a></span>
+						<span><a id="titleLink" href="contentView?pnum=${dto.pnum }">${dto.ptitle }</a></span>
 					</td>
 					<td ${s.last ? 'class="lpwriter"' : 'class="pwriter"' }>
 						<span>${dto.pwriter }</span>
@@ -315,18 +347,46 @@
 	
 	<footer>
 		<div id="writeButtonWrap">
-			<button id="write" class="defaultButton">글쓰기</button>
+			<button id="write" class="defaultButton" onclick="writeView()">글쓰기</button>
 		</div>
 		
+
+		
+		
 		<div id="pageButtonWrap">
-			<table id="pageButtonTable">
+			<c:set value="${searchVO.pageStart }" var="start"/>
+			<c:set value="${searchVO.pageEnd }" var="end"/>
+			<c:set value="${searchVO.page }" var="cur"/>
+		
+			<c:if test="${searchVO.grpPageCnt < end }">
+				<table class="pageArrowsTable">
+					<tr>
+						<td onclick="changePage(1)"><i class="fa-solid fa-angles-left"></i></td>
+						<td onclick="changePage(${start - 1})"><i class="fa-solid fa-angle-left"></i></td>
+					</tr>
+				</table>
+			</c:if>
+
+			
+			<table class="pageButtonTable">
 				<tr>
-					<c:forEach begin="${searchVO.pageStart }" end="${searchVO.pageEnd }" var="pageNum">
-						<td>${pageNum }<a href="policeBoard?page=${pageNum }"></a></td>
+					<c:forEach begin="${start }" end="${end }" var="pageNum">
+						<td onclick="changePage(${pageNum })">${pageNum }</td>
 					</c:forEach>
 				</tr>
 			</table>
+			
+			<c:if test="${searchVO.totPage > end }">
+				<table class="pageArrowsTable" >
+					<tr>
+						<td onclick="changePage(${end + 1})"><i class="fa-solid fa-angle-right"></i></td>
+						<td onclick="changePage(${searchVO.totPage})"><i class="fa-solid fa-angles-right"></i></td>
+					</tr>
+				</table>
+			</c:if>
 		</div>
+		
+
 	</footer>
 	
 </body>

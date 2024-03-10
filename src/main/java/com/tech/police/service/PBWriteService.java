@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 
 import com.tech.police.dao.IDao;
 
-public class PBContentViewService implements PBService {
+public class PBWriteService implements PBService {
 
 	@Override
 	public void execute(Model model) {
@@ -17,8 +17,10 @@ public class PBContentViewService implements PBService {
 		IDao dao = (IDao) map.get("dao");
 		
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
-		int pnum = Integer.parseInt(request.getParameter("pnum"));
-		dao.updateHit(pnum);
-		model.addAttribute("dto", dao.select(pnum));
+		String ptitle = request.getParameter("ptitle");
+		String pcontent = request.getParameter("pcontent");
+		String pwriter = request.getParameter("pwriter");
+		String pfilesrc = request.getParameter("pfilesrc");
+		dao.insert(ptitle, pcontent, pwriter, pfilesrc);
 	}
 }

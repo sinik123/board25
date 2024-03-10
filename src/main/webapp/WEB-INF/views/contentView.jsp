@@ -8,12 +8,12 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script>
-	function editPost() {
-		location.href="editView";
+	function editPost(pnum) {
+		location.href="editView?pnum=" + pnum;
 	}
 	
-	function deletePost() {
-		location.href="deletePost";
+	function deletePost(pnum) {
+		location.href="deletePost?pnum=" + pnum;
 	}
 	
 	function toBoard() {
@@ -79,8 +79,8 @@
 			<td colspan="6">${dto.pcontent }</td>
 		</tr>
 	</table>
-	<button onclick="edit()">수정하기</button>
-	<button onclick="deletePost()">삭제하기</button>
+	<button onclick="editPost(${dto.pnum })">수정하기</button>
+	<button onclick="deletePost(${dto.pnum })">삭제하기</button>
 	<button onclick="toBoard()">돌아가기</button>
 
 </body>

@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 
 import com.tech.police.dao.IDao;
 
-public class PBContentViewService implements PBService {
+public class PBEditViewService implements PBService {
 
 	@Override
 	public void execute(Model model) {
@@ -18,7 +18,7 @@ public class PBContentViewService implements PBService {
 		
 		HttpServletRequest request = (HttpServletRequest) map.get("request");
 		int pnum = Integer.parseInt(request.getParameter("pnum"));
-		dao.updateHit(pnum);
+		
 		model.addAttribute("dto", dao.select(pnum));
 	}
 }

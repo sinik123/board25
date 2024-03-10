@@ -63,4 +63,36 @@
 	    WHERE
 	        PNUM = #{param1}
 	</select>
+	
+	<update id="updateHit">
+		UPDATE 
+		    POLICEBOARD
+		SET
+			PHIT = PHIT + 1
+	    WHERE
+	        PNUM = #{param1}
+	</update>
+	
+	<update id="update">
+		UPDATE 
+		    POLICEBOARD
+		SET
+			PTITLE = #{param2}, PCONTENT = #{param3}, PWRITER = #{param4}, PFILESRC = #{param5}
+	    WHERE
+	        PNUM = #{param1}
+	</update>
+	
+	<insert id="insert">
+		INSERT INTO
+			POLICEBOARD
+		VALUES (
+			SEQ_POLICEBOARD.NEXTVAL, #{param1}, #{param2}, #{param3}, SYSTIMESTAMP, 0, #{param4})
+	</insert>
+	
+	<delete id="delete">
+		DELETE
+			POLICEBOARD
+		WHERE
+	        PNUM = #{param1}
+	</delete>
 </mapper>

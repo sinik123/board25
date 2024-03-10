@@ -27,7 +27,7 @@ public class PBListService implements PBService {
 		
 		String keyword = request.getParameter("keyword");
 		if (keyword == null) {
-			keyword = "검색어를 입력하세요.";
+			keyword = "";
 		}
 		
 		String pageStr = request.getParameter("page");
