@@ -48,14 +48,9 @@
 	}
 	
 	#policeBoard td {
-		border-bottom: 1px solid #e2e2e2;
 		padding: 5px;
 	}
-	
-/* 	#policeBoard tr, #policeBoard td, #policeBoard th{
-		border: 1px solid black;
-	} */
-	
+		
 	#hptitle {
 		text-align: left;
 	}
@@ -68,8 +63,20 @@
 		width: 10%;
 	}
 	
+	.pnum, .ptitle, .pwriter, .pregdate, .phit {
+		border-bottom: 1px solid #e2e2e2;
+	}
+	
 	.pnum, .pwriter, .pregdate, .phit {
 		text-align: center;
+	}
+	
+	.lpnum, .lpwriter, .lpregdate, .lphit {
+		text-align: center;
+	}
+	
+	.lpnum, .lptitle, .lpwriter, .lpregdate, .lphit {
+		border-bottom: 1px solid #cccccc;
 	}
 	
 	#searchFormWrap {
@@ -130,6 +137,7 @@
 		vertical-align: top;
 		box-sizing: content-box;
 		height: 20px;
+		color: #5f5f5f;
 	}
 	
 	.defaultButton {
@@ -202,14 +210,18 @@
 	}
 	
 	function clearSearchNotice() {
-		if (document.getElementById('keywordInput').value == "검색어를 입력하세요.") {
-			document.getElementById('keywordInput').value = "";
+		if (document.getElementById("keywordInput").value == "검색어를 입력하세요.") {
+			var element = document.getElementById("keywordInput");
+			element.value = "";
+			element.style.color = "#000000";
 		}
 	}
 	
 	function checkempty() {
-		if (document.getElementById('keywordInput').value == "") {
-			document.getElementById('keywordInput').value = "검색어를 입력하세요.";
+		if (document.getElementById("keywordInput").value == "") {
+			var element = document.getElementById("keywordInput");
+			element.value = "검색어를 입력하세요.";
+			element.style.color = "#5f5f5f";
 		}
 	}
 </script>
@@ -279,21 +291,21 @@
 				<th id="hpregdate">등록일</th>
 				<th id="hphit">조회수</th>
 			</tr>
-			<c:forEach items="${list }" var="dto">
+			<c:forEach items="${list }" var="dto" varStatus="s">
 				<tr>
-					<td class="pnum">
+					<td ${s.last ? 'class="lpnum"' : 'class="pnum"' }>
 						<span>${dto.pnum }</span>
 					</td>
-					<td class="ptitle">
+					<td ${s.last ? 'class="lptitle"' : 'class="ptitle"' }>
 						<span><a href="contentView?pnum=${dto.pnum }">${dto.ptitle }</a></span>
 					</td>
-					<td class="pwriter">
+					<td ${s.last ? 'class="lpwriter"' : 'class="pwriter"' }>
 						<span>${dto.pwriter }</span>
 					</td>
-					<td class="pregdate">
+					<td ${s.last ? 'class="lpregdate"' : 'class="pregdate"' }>
 						<fmt:formatDate value="${dto.pregdate }" pattern="yyyy-MM-dd"/>
 					</td>
-					<td class="phit">
+					<td ${s.last ? 'class="lphit"' : 'class="phit"' }>
 						<span>${dto.phit }</span>
 					</td>
 				</tr>
